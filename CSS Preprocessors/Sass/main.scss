@@ -1,0 +1,211 @@
+@use "sass:math" as math;
+@use "one" as newOne; // importing file as a module
+@use "two";
+
+nav {
+    color: newOne.$color;
+}
+
+nav {
+    color: two.$one-color; // be careful with variables of the same name
+}
+
+// basics and &
+
+nav {
+    width: 20px;
+    color: red;
+    font: {
+        size: 200px;
+        weight: 400;
+        family: "Times";
+    }
+
+    margin : auto {
+        top: 200px;
+    }
+
+    ul {
+        color: blue;
+    }
+
+    > li {
+        width: 30px;
+    }
+
+    &__left {
+        color: blue;
+
+        &--thin {
+            color: yellow;
+        }
+    }
+
+    &:hover {
+        color: red;
+    }
+}
+
+// nav__left {
+//     color: blue;
+// }
+
+// nav__left--thin {
+//     color: yellow;
+// }
+
+header {
+    ul {
+        color: blue;
+    }
+}
+
+ul {
+    nav & {
+        color: blue;
+    }
+
+    header & {
+        color: red;
+    }
+}
+
+ul {
+    :not(&) {
+        color: red;
+    }
+}
+
+// % placeholder, classes and inheritance
+
+%some-class {
+    width: 20px;
+    color: green;
+}
+
+nav {
+    @extend %some-class;
+    font-size: 20px;
+}
+
+button {
+    @extend %some-class;
+    font-size: 14px;
+}
+
+// $ variables
+
+$var-one : 20px;
+
+nav {
+    $var-one : 14px !global; // makes a variable a global variable (don't use this bc difficult to manage)
+    font-size: $var-one;
+    line-height: math.floor(math.$pi);
+}
+
+button {
+    font-size: $var-one;
+}
+
+// @ mixins for reusability
+
+@mixin reuse ($val : 40px, $color: red) { // default color red
+    width: $val;
+    color: $color;
+}
+
+%placeholder {
+    height: 10px;
+}
+
+nav {
+    @extend %placeholder;
+    @extend %placeholder;
+    @include reuse(40px, $color: blue);
+    @include reuse();
+    font-size: 10px;
+}
+
+button {
+    @extend %placeholder;
+    @extend %placeholder;
+    @include reuse(40px);
+    @include reuse(40px);
+    font-size: 10px;
+}
+
+// extend/placeholder used to extend (will only inherit properties ONCE no matter how many times, include/mixins will be copied multiple times)
+
+// #{Interpolations}
+
+@mixin reuse2($dimension) {
+    #{$dimension} : 100%;
+}
+
+nav {
+    @include reuse2 ("height");
+}
+
+button {
+    @include reuse2 ("width");
+}
+
+@mixin btnMaker ($arg) {
+    .btn-#{$arg} {
+        color: $arg;
+        width: 200px;
+    }
+}
+
+// .btn-red {
+//     color: red;
+//     width: 200px;
+// }
+
+// .btn-blue {
+//     color: blue;
+//     width: 200px;
+// }
+
+@include btnMaker("red");
+@include btnMaker("blue");
+
+@mixin btnMaker2 ($args...) {
+    @for $i from 0 to length($args) {
+        .btn-#{nth($args, $i + 1)} {
+            color: #{nth($args, $i + 1)};
+            width: 200px;
+        }
+    }
+}
+
+@include btnMaker2("red", "blue", "yellow");
+
+// @ function
+
+@function evenOdd($val) {
+    @if ($val % 2 == 0) {
+        @return 50%;
+    } @else {
+        @return 100%;
+    }
+}
+
+nav {
+    width: evenOdd(2);
+}
+
+button {
+    width: evenOdd(1);
+}
+
+// ! default
+
+$color: yellow;
+$color: green !default; // use this value only if this variable hasn't been declared
+
+nav {
+    color: $color;
+}
+
+// always better to use this if you're unsure if this is the right colour of not

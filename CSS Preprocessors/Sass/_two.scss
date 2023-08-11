@@ -1,0 +1,10 @@
+@use "one";
+@forward "one" as one-*; // to cascade the variables in "one" to the files that include "two"
+
+// -* means prepending a prefix to all imports
+
+$color: blue;
+
+button {
+    color: one.$color;
+}
