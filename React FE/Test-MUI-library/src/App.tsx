@@ -1,10 +1,12 @@
 import "./App.css";
 import IconBar from "./components/IconBar";
+import PageLink from "./components/PageLink";
 
 function App() {
   return (
     <>
       <IconBar />
+      <PageLink />
     </>
   );
 }

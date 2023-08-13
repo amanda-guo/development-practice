@@ -2,6 +2,8 @@ import { GitHub, LinkedIn, Mail } from "@mui/icons-material";
 import IconButton from "./IconButton";
 import { Stack } from "@mui/material";
 
+// TODO: get that highlight thing showing a url on the bottom left
+
 const IconBar = () => {
   return (
     <>
